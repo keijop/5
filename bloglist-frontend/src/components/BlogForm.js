@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const BlogForm = ({
-  title,
-  author,
-  url,
-  submitHandler,
-  setUrl,
-  setTitle,
-  setAuthor,
-}) => {
+const BlogForm = ({ submitHandler }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const blogSubmitHandler = event => {
+    event.preventDefault()
+    submitHandler(title, author, url)
+  }
+
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={blogSubmitHandler}>
       <input
         id='title'
         type='text'

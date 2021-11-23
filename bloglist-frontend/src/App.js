@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Message from './components/Message'
+import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 
@@ -11,10 +12,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [message, setMessage] = useState({ text: '', warning: false })
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs))
@@ -56,10 +56,12 @@ const App = () => {
     setUser('')
   }
 
-  const blogSubmitHandler = async event => {
-    event.preventDefault()
+  const blogSubmitHandler = async (title, author, url) => {
     try {
-      const response = await blogService.postBlog({ title, url, author })
+      const response = await blogService.postBlog({ title, author, url })
+      blogFormRef.current.toggleVisibility()
+      setBlogs([...blogs, response.data])
+      console.log(response.data)
       displayMessage(
         `${response.data.title} by ${response.data.author} added`,
         false
@@ -93,15 +95,13 @@ const App = () => {
         <b>{user.name}</b> is logged in
         <button onClick={logoutHandler}>logout</button>
       </p>
-      <BlogForm
-        submitHandler={blogSubmitHandler}
-        author={author}
-        title={title}
-        url={url}
-        setTitle={setTitle}
-        setAuthor={setAuthor}
-        setUrl={setUrl}
-      />
+      <Togglable buttonLabel={'create blog'} ref={blogFormRef}>
+        <BlogForm
+          postBlog={blogService.postBlog}
+          displayMessage={displayMessage}
+          submitHandler={blogSubmitHandler}
+        />
+      </Togglable>
       <br />
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
