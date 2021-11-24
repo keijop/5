@@ -82,6 +82,18 @@ const App = () => {
     }
   }
 
+  const removeHandler = async id => {
+    try {
+      if (!window.confirm('Really delete this?')) return
+      const response = await blogService.removeBlog(id)
+      const removedBlog = response.data
+      console.log(removedBlog)
+      setBlogs(blogs.filter(blog => blog.id !== removedBlog.id))
+    } catch (error) {
+      displayMessage(error.response.data.error, true)
+    }
+  }
+
   if (user === '') {
     return (
       <div>
@@ -115,7 +127,13 @@ const App = () => {
       </Togglable>
       <br />
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} likeHandler={likeHandler} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          user={user}
+          likeHandler={likeHandler}
+          removeHandler={removeHandler}
+        />
       ))}
     </div>
   )

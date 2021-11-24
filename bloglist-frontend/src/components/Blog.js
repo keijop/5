@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, likeHandler }) => {
+const Blog = ({ blog, likeHandler, user, removeHandler }) => {
   const [fullView, setFullView] = useState(false)
 
   const toggleView = () => setFullView(!fullView)
@@ -29,6 +29,12 @@ const Blog = ({ blog, likeHandler }) => {
         {fullView ? 'hide details' : 'details'}
       </button>
       {fullView ? blogDetails() : ''}
+      <br />
+      {user.username === blog.user.username ? (
+        <button onClick={() => removeHandler(blog.id)}>remove blog</button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
