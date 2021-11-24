@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+const baseUrl = '/api/blogs/'
 
 let token = null
 
@@ -10,8 +10,8 @@ const setToken = newToken => {
 const getAll = async () => {
   const response = await axios.get(baseUrl)
   const data = response.data
-  console.log(data)
-  return data
+  const sortedData = data.sort((a, b) => b.likes - a.likes)
+  return sortedData
 }
 
 const postBlog = async body => {
@@ -20,4 +20,9 @@ const postBlog = async body => {
   return response
 }
 
-export default { getAll, postBlog, setToken }
+const updateBlog = async (id, body) => {
+  const response = await axios.patch(baseUrl + id, body)
+  return response
+}
+
+export default { getAll, postBlog, updateBlog, setToken }

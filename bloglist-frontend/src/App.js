@@ -61,11 +61,22 @@ const App = () => {
       const response = await blogService.postBlog({ title, author, url })
       blogFormRef.current.toggleVisibility()
       setBlogs([...blogs, response.data])
-      console.log(response.data)
       displayMessage(
         `${response.data.title} by ${response.data.author} added`,
         false
       )
+    } catch (error) {
+      displayMessage(error.response.data.error, true)
+    }
+  }
+
+  const likeHandler = async id => {
+    try {
+      const blog = blogs.find(blog => blog.id === id)
+      const updatedBlog = await blogService.updateBlog(id, {
+        likes: blog.likes + 1,
+      })
+      setBlogs(blogs.map(blog => (blog.id !== id ? blog : updatedBlog.data)))
     } catch (error) {
       displayMessage(error.response.data.error, true)
     }
@@ -104,7 +115,7 @@ const App = () => {
       </Togglable>
       <br />
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeHandler={likeHandler} />
       ))}
     </div>
   )
