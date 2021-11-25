@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+
 const Blog = ({ blog, likeHandler, user, removeHandler }) => {
+  Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    likeHandler: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    removeHandler: PropTypes.func.isRequired,
+  }
+
   const [fullView, setFullView] = useState(false)
 
   const toggleView = () => setFullView(!fullView)
@@ -8,7 +17,9 @@ const Blog = ({ blog, likeHandler, user, removeHandler }) => {
     return (
       <div>
         <span>likes : {blog.likes}</span>
-        <button onClick={() => likeHandler(blog.id)}>like &#128077;</button>
+        <button className='likeBtn' onClick={() => likeHandler(blog.id)}>
+          like &#128077;
+        </button>
         <br />
         <span>{blog.url}</span>
       </div>
@@ -24,8 +35,8 @@ const Blog = ({ blog, likeHandler, user, removeHandler }) => {
 
   return (
     <div style={blogStyles}>
-      "{blog.title}" by {blog.author}
-      <button onClick={toggleView}>
+      &quot;{blog.title}&quot; by {blog.author}
+      <button className='detailsTogglerBtn' onClick={toggleView}>
         {fullView ? 'hide details' : 'details'}
       </button>
       {fullView ? blogDetails() : ''}

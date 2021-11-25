@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export const LoginForm = ({
   username,
@@ -7,6 +8,14 @@ export const LoginForm = ({
   setPassword,
   clickHandler,
 }) => {
+  LoginForm.propTypes = {
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    setUsername: PropTypes.func.isRequired,
+    setPassword: PropTypes.func.isRequired,
+    clickHandler: PropTypes.func.isRequired,
+  }
+
   return (
     <form>
       <label htmlFor='username'>username:</label>
