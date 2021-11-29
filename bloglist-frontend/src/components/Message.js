@@ -4,6 +4,7 @@ const Message = ({ message }) => {
   return (
     <div>
       <span
+        id='message'
         style={
           message.warning
             ? { border: '3px solid red', color: 'red' }
