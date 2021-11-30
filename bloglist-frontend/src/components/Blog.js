@@ -34,7 +34,7 @@ const Blog = ({ blog, likeHandler, user, removeHandler }) => {
   }
 
   return (
-    <div style={blogStyles}>
+    <div className='blog' style={blogStyles}>
       &quot;{blog.title}&quot; by {blog.author}
       <button className='detailsTogglerBtn' onClick={toggleView}>
         {fullView ? 'hide details' : 'details'}

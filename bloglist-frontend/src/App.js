@@ -58,7 +58,10 @@ const App = () => {
 
   const blogSubmitHandler = async (title, author, url) => {
     try {
-      const response = await blogService.postBlog({ title, author, url })
+      const response = await blogService.postBlog(
+        { title, author, url },
+        user.token
+      )
       blogFormRef.current.toggleVisibility()
       setBlogs([...blogs, response.data])
       displayMessage(
@@ -73,10 +76,11 @@ const App = () => {
   const likeHandler = async id => {
     try {
       const blog = blogs.find(blog => blog.id === id)
-      const updatedBlog = await blogService.updateBlog(id, {
+      await blogService.updateBlog(id, {
         likes: blog.likes + 1,
       })
-      setBlogs(blogs.map(blog => (blog.id !== id ? blog : updatedBlog.data)))
+      blog.likes++
+      setBlogs(blogs.map(blog => (blog.id !== id ? blog : blog)))
     } catch (error) {
       displayMessage(error.response.data.error, true)
     }
@@ -85,7 +89,7 @@ const App = () => {
   const removeHandler = async id => {
     try {
       if (!window.confirm('Really delete this?')) return
-      const response = await blogService.removeBlog(id)
+      const response = await blogService.removeBlog(id, user.token)
       const removedBlog = response.data
       console.log(removedBlog)
       setBlogs(blogs.filter(blog => blog.id !== removedBlog.id))
